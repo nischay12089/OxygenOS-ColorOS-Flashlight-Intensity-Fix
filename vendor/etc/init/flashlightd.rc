@@ -1,0 +1,19 @@
+# flashlightd - maps the OxygenOS flashlight slider (SystemUI torch strength steps 1..4) onto
+# real currents on the PMIC torch channels, which the Xiaomi camera HAL on this port leaves at
+# 6 mA for every step. All settings are compiled into the binary.
+#
+# Files:
+#   /vendor/bin/flashlightd               the daemon
+#   /vendor/etc/init/flashlightd.rc       this file
+#
+# Control at runtime:  flashlightd start|stop|restart|status  (drives ctl.start/ctl.stop)
+
+service vendor.flashlightd /vendor/bin/flashlightd daemon
+    class late_start
+    # led:torch_N/brightness is system:system 0664; cameraserver accepts system listeners.
+    user system
+    group system camera
+    # This port runs SELinux permissive; su is KernelSU's unconfined domain. An enforcing build
+    # needs its own domain (type flashlightd, init_daemon_domain(flashlightd)) instead.
+    seclabel u:r:su:s0
+    # not oneshot: init restarts the daemon if it ever exits
