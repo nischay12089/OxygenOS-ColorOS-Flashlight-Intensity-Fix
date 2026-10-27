@@ -15,5 +15,5 @@ service vendor.flashlightd /vendor/bin/flashlightd daemon
     group system camera
     # This port runs SELinux permissive; su is KernelSU's unconfined domain. An enforcing build
     # needs its own domain (type flashlightd, init_daemon_domain(flashlightd)) instead.
-    seclabel u:r:su:s0
+    seclabel u:r:init:s0
     # not oneshot: init restarts the daemon if it ever exits
